@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Image } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { selectCryptoData } from '../redux/cryptoSlice';
-import btcLogo from '../assets/btc.png'; // Add similar images for all coins
+import btcLogo from '../assets/btc.png';
 import ethLogo from '../assets/eth.png';
 import usdtLogo from '../assets/usdt.png';
 import xrpLogo from '../assets/xrp.png';

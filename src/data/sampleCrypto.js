@@ -1,4 +1,3 @@
-// src/data/cryptoData.js
 import btcLogo from '../assets/btc.png';
 import ethLogo from '../assets/eth.png';
 import usdtLogo from '../assets/usdt.png';

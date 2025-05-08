@@ -11,7 +11,7 @@ function App() {
       dispatch(updatePrices());
     }, 2000); // 2 seconds
 
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, [dispatch]);
 
   return (

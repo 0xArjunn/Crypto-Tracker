@@ -1,63 +1,65 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { updatePrices } from '../redux/cryptoSlice';
+import React from 'react';
 import { Table, Image } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+import { selectCryptoData } from '../redux/cryptoSlice';
+import btcLogo from '../assets/btc.png'; // Add similar images for all coins
+import ethLogo from '../assets/eth.png';
+import usdtLogo from '../assets/usdt.png';
+import xrpLogo from '../assets/xrp.png';
+import bnbLogo from '../assets/bnb.png';
+
+const logoMap = {
+  BTC: btcLogo,
+  ETH: ethLogo,
+  USDT: usdtLogo,
+  XRP: xrpLogo,
+  BNB: bnbLogo,
+};
 
 const CryptoTable = () => {
-  const dispatch = useDispatch();
-  const assets = useSelector((state) => state.crypto.assets);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      dispatch(updatePrices());
-    }, 2000); // every 2 seconds
-
-    return () => clearInterval(interval);
-  }, [dispatch]);
+  const cryptoData = useSelector(selectCryptoData);
 
   return (
-    <div className="container mt-4">
-      <h2 className="text-center mb-4">Real-Time Crypto Price Tracker</h2>
-      <Table striped bordered hover responsive className="text-center">
-        <thead className="table-dark">
+    <div className="table-responsive p-4">
+      <Table striped bordered hover className="align-middle text-center">
+        <thead className="table-light">
           <tr>
             <th>#</th>
-            <th>Logo</th>
             <th>Name</th>
-            <th>Symbol</th>
-            <th>Price ($)</th>
+            <th>Price</th>
             <th>1h %</th>
             <th>24h %</th>
             <th>7d %</th>
             <th>Market Cap</th>
-            <th>24h Volume</th>
+            <th>Volume (24h)</th>
             <th>Circulating Supply</th>
-            <th>Max Supply</th>
-            <th>7D Chart</th>
+            <th>Last 7 Days</th>
           </tr>
         </thead>
         <tbody>
-          {assets.map((coin, index) => (
-            <tr key={coin.id}>
+          {cryptoData.map((coin, index) => (
+            <tr key={coin.symbol}>
               <td>{index + 1}</td>
-              <td><Image src={coin.logo} alt={coin.symbol} width="30" height="30" rounded /></td>
-              <td>{coin.name}</td>
-              <td>{coin.symbol}</td>
+              <td className="d-flex align-items-center gap-2">
+                <Image src={logoMap[coin.symbol]} width="24" height="24" alt={coin.name} roundedCircle />
+                <strong>{coin.name}</strong> <span className="text-muted">{coin.symbol}</span>
+              </td>
               <td>${coin.price.toLocaleString()}</td>
               <td style={{ color: coin.percentChange1h >= 0 ? 'green' : 'red' }}>
-                {coin.percentChange1h}%
+                {coin.percentChange1h.toFixed(2)}%
               </td>
               <td style={{ color: coin.percentChange24h >= 0 ? 'green' : 'red' }}>
-                {coin.percentChange24h}%
+                {coin.percentChange24h.toFixed(2)}%
               </td>
               <td style={{ color: coin.percentChange7d >= 0 ? 'green' : 'red' }}>
-                {coin.percentChange7d}%
+                {coin.percentChange7d.toFixed(2)}%
               </td>
               <td>${coin.marketCap.toLocaleString()}</td>
               <td>${coin.volume24h.toLocaleString()}</td>
               <td>{coin.circulatingSupply}</td>
-              <td>{coin.maxSupply}</td>
-              <td><Image src={coin.chartImage} alt="chart" width="100" /></td>
+              <td>
+                <Image src={coin.chartImage} width="100" height="40" alt="7d chart" />
+              </td>
             </tr>
           ))}
         </tbody>

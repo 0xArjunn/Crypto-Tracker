@@ -3,28 +3,25 @@ import sampleCrypto from '../data/sampleCrypto';
 
 const cryptoSlice = createSlice({
   name: 'crypto',
-  initialState: {
-    assets: sampleCrypto,
-  },
+  initialState: sampleCrypto,
   reducers: {
     updatePrices: (state) => {
-      state.assets = state.assets.map((asset) => {
-        const randomChange = (value) => {
-          const change = (Math.random() * 2 - 1) * 5; // -5% to +5%
-          return +(value + value * (change / 100)).toFixed(2);
-        };
+      state.forEach((coin) => {
+        const getRandom = (min, max) => +(Math.random() * (max - min) + min).toFixed(2);
 
-        return {
-          ...asset,
-          price: randomChange(asset.price),
-          percentChange1h: +(Math.random() * 10 - 5).toFixed(2),
-          percentChange24h: +(Math.random() * 10 - 5).toFixed(2),
-          volume24h: Math.floor(asset.volume24h * (1 + (Math.random() * 0.1 - 0.05)))
-        };
+        const priceChange = getRandom(-100, 100);
+        const volumeChange = getRandom(-10000000, 10000000);
+
+        coin.price = +(coin.price + priceChange).toFixed(2);
+        coin.percent_change_1h = getRandom(-5, 5);
+        coin.percent_change_24h = getRandom(-10, 10);
+        coin.percent_change_7d = getRandom(-20, 20);
+        coin.volume_24h = coin.volume_24h + volumeChange;
       });
-    }
-  }
+    },
+  },
 });
 
 export const { updatePrices } = cryptoSlice.actions;
+export const selectCryptoData = (state) => state.crypto;
 export default cryptoSlice.reducer;
